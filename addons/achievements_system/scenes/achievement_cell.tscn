@@ -96,7 +96,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-fill_mode = 4
+fill_mode = 5
 texture_under = ExtResource("2_wclmd")
 texture_progress = ExtResource("3_ux2ly")
 

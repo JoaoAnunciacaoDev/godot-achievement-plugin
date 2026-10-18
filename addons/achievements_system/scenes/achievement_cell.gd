@@ -47,13 +47,22 @@ func setup(
 				unlock_label.visible = false
 	
 	if progress_bar:
-		var show : bool = (
-			achievement.is_cumulative and not is_unlocked and current_prog >= 0
-		)
+		var show : bool = false
+		
+		if achievement.is_cumulative:
+			if is_unlocked:
+				if notification:
+					show = true
+					var target : int = max_prog if max_prog > 0 else achievement.max_progress
+					progress_bar.max_value = target
+					progress_bar.value = target
+			
+			elif not achievement.is_secret and current_prog >= 0:
+				show = true
+				progress_bar.max_value = max_prog
+				progress_bar.value = current_prog
+		
 		progress_bar.visible = show
-		if show:
-			progress_bar.max_value = max_prog
-			progress_bar.value = current_prog
 
 func _ready() -> void:
 	if not _is_notification: return

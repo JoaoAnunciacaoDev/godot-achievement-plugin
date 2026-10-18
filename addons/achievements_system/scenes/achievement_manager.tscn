@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://dd8dvfiq56dp7"]
+
+[ext_resource type="Script" uid="uid://c7romekra3nje" path="res://addons/achievements_system/scenes/achievements_manager.gd" id="1_mgr"]
+
+[node name="AchievementsManager" type="Node" unique_id=1314859621]
+script = ExtResource("1_mgr")
+achievements_folder = "res://addons/achievements_system/achievements"

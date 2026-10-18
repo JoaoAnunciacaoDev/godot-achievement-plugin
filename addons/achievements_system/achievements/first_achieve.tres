@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Achievement" format=3 uid="uid://d3xr8d2bhqdtp"]
+
+[ext_resource type="Script" uid="uid://c5qldwy10wd87" path="res://addons/achievements_system/resources/achievement.gd" id="1_bmibc"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ym5vw"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_6ai1u"]
+
+[resource]
+script = ExtResource("1_bmibc")
+id = "first_achieve"
+achievement_name = "Your First Achievement"
+unlocked_icon = SubResource("PlaceholderTexture2D_6ai1u")
+locked_icon = SubResource("PlaceholderTexture2D_ym5vw")
+metadata/_custom_type_script = "uid://c5qldwy10wd87"

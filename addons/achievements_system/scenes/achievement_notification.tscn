@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bukdvvcbg2ytg"]
+
+[ext_resource type="Script" uid="uid://c6enrqiy6ifn6" path="res://addons/achievements_system/scenes/achievement_notification.gd" id="1_6ai1u"]
+
+[node name="AchievementNotification" type="CanvasLayer" unique_id=1130859260 node_paths=PackedStringArray("vbox")]
+process_mode = 3
+layer = 6
+script = ExtResource("1_6ai1u")
+vbox = NodePath("VBoxContainer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=342289581]
+custom_minimum_size = Vector2(224, 0)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -232.0
+offset_top = -96.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0

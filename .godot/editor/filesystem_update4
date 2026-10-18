@@ -1,0 +1,5 @@
+res://addons/achievements_system/test/main.tscn
+res://addons/achievements_system/plugin.gd
+res://addons/achievements_system/scenes/achievement_notification.tscn
+res://addons/achievements_system/scenes/achievement_cell.tscn
+res://addons/achievements_system/achievements/second_achieve.tres

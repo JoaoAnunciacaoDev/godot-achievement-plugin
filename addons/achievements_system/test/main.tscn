@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://dewpbyjeksimq"]
+
+[ext_resource type="Script" uid="uid://crm664b4eim1t" path="res://addons/achievements_system/test/main.gd" id="1_bbovy"]
+
+[node name="Main" type="Control" unique_id=1120129762]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bbovy")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=962739706]
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1550159851]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=377511931]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=79484198]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 64
+text = "Test Area"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FirstAchievementButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=60641458]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Test First Achievement"
+
+[node name="SecondAchievementButton2" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=595733724]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Test Second Achievement"
+
+[node name="CumulativeAchievementButton3" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1370607545]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Test Cumulative Achievement"
+
+[node name="ResetButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1302466797]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Reset"
+
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/FirstAchievementButton" to="." method="_on_first_achievement_button_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/SecondAchievementButton2" to="." method="_on_second_achievement_button_2_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/CumulativeAchievementButton3" to="." method="_on_cumulative_achievement_button_3_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]

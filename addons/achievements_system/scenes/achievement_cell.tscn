@@ -1,0 +1,124 @@
+[gd_scene format=3 uid="uid://cynnui308wqnu"]
+
+[ext_resource type="Script" uid="uid://v5lclie77w46" path="res://addons/achievements_system/scenes/achievement_cell.gd" id="1_cell"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.0745098, 0.0784314, 0.117647, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.94902, 0.768627, 0.160784, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.65)
+shadow_size = 3
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_accent"]
+bg_color = Color(0.384314, 0.254902, 0.65098, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icon"]
+bg_color = Color(0.184314, 0.137255, 0.27451, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.94902, 0.768627, 0.160784, 0.8)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="AchievementCell" type="PanelContainer" unique_id=808844106 node_paths=PackedStringArray("icon", "title_label", "description_label", "unlock_label", "progress_bar", "notification_timer")]
+offset_right = 224.0
+offset_bottom = 76.0
+pivot_offset = Vector2(0.5, 0.5)
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+script = ExtResource("1_cell")
+icon = NodePath("MarginContainer/HBoxContainer/IconWrapper/IconBg/TextureRect")
+title_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/Title")
+description_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/Description")
+unlock_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/UnlockLabel")
+progress_bar = NodePath("MarginContainer/HBoxContainer/IconWrapper/ProgressBar")
+notification_timer = NodePath("Timer")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=568362931]
+layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 9
+theme_override_constants/margin_bottom = 7
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=670188551]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Accent" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=1681743939]
+custom_minimum_size = Vector2(3, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_accent")
+
+[node name="IconWrapper" type="Control" parent="MarginContainer/HBoxContainer" unique_id=496781917]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="IconBg" type="PanelContainer" parent="MarginContainer/HBoxContainer/IconWrapper" unique_id=1995316107]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_icon")
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/IconWrapper/IconBg" unique_id=1606970134]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ProgressBar" type="TextureProgressBar" parent="MarginContainer/HBoxContainer/IconWrapper" unique_id=1093678631]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+fill_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1150500668]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="UnlockLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=428982814]
+layout_mode = 2
+text = "ACHIEVEMENT UNLOCKED"
+
+[node name="Title" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=1120555214]
+custom_minimum_size = Vector2(142, 0)
+layout_mode = 2
+text = "Title"
+autowrap_mode = 3
+
+[node name="Description" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=66549772]
+custom_minimum_size = Vector2(142, 0)
+layout_mode = 2
+text = "Desc"
+autowrap_mode = 3
+
+[node name="Timer" type="Timer" parent="." unique_id=928787277]
+process_mode = 3
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

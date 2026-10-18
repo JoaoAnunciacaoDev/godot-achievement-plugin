@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Achievement" format=3 uid="uid://cqdviggbmtjph"]
+
+[ext_resource type="Script" uid="uid://c5qldwy10wd87" path="res://addons/achievements_system/resources/achievement.gd" id="1_l80n0"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ym5vw"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_6ai1u"]
+
+[resource]
+script = ExtResource("1_l80n0")
+id = "second_achieve"
+achievement_name = "Your Second Achievement"
+unlocked_icon = SubResource("PlaceholderTexture2D_6ai1u")
+locked_icon = SubResource("PlaceholderTexture2D_ym5vw")
+metadata/_custom_type_script = "uid://c5qldwy10wd87"

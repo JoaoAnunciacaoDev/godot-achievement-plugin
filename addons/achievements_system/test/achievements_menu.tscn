@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://cbba421fhk82m"]
+
+[ext_resource type="Script" uid="uid://cbbdpdq7n2q12" path="res://addons/achievements_system/test/achievements_menu.gd" id="1_m561p"]
+[ext_resource type="PackedScene" uid="uid://cynnui308wqnu" path="res://addons/achievements_system/scenes/achievement_cell.tscn" id="2_55xrs"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xc5lc"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="AchievementsMenu" type="PanelContainer" unique_id=639785716 node_paths=PackedStringArray("container")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_xc5lc")
+script = ExtResource("1_m561p")
+cell = ExtResource("2_55xrs")
+container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1755390262]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1029349664]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=426376972]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 64
+text = "All Achievements"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=1928921233]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=284714650]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1997604147]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+text = "Back"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

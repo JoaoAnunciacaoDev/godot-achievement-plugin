@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://dewpbyjeksimq"]
 
 [ext_resource type="Script" uid="uid://crm664b4eim1t" path="res://addons/achievements_system/test/main.gd" id="1_bbovy"]
+[ext_resource type="PackedScene" uid="uid://cbba421fhk82m" path="res://addons/achievements_system/test/achievements_menu.tscn" id="2_xc5lc"]
 
-[node name="Main" type="Control" unique_id=1120129762]
+[node name="Main" type="Control" unique_id=1120129762 node_paths=PackedStringArray("achievements_menu")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,6 +11,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_bbovy")
+achievements_menu = NodePath("AchievementsMenu")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=962739706]
 custom_minimum_size = Vector2(500, 500)
@@ -62,12 +64,22 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Test Cumulative Achievement"
 
+[node name="SeeAllAchievements" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1539398299]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Achievements Menu"
+
 [node name="ResetButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1302466797]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Reset"
 
+[node name="AchievementsMenu" parent="." unique_id=639785716 instance=ExtResource("2_xc5lc")]
+visible = false
+layout_mode = 1
+
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/FirstAchievementButton" to="." method="_on_first_achievement_button_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/SecondAchievementButton2" to="." method="_on_second_achievement_button_2_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/CumulativeAchievementButton3" to="." method="_on_cumulative_achievement_button_3_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/SeeAllAchievements" to="." method="_on_see_all_achievements_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]

@@ -7,4 +7,6 @@ class_name Achievement
 @export var unlocked_icon: Texture2D
 @export var locked_icon: Texture2D
 @export var is_cumulative: bool = false
+@export var is_secret: bool = false
+@export var secret_description: String = "Keep playing to discover"
 @export_range(2, 999, 1) var max_progress: int = 2

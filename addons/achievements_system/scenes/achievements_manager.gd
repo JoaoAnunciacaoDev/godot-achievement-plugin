@@ -47,8 +47,11 @@ func register_achievement(achievement: Achievement) -> void:
 		achievements_files.append(achievement)
 
 func unlock(id: String) -> void:
-	if not all_achievements.has(id) or is_unlocked(id):
+	if not all_achievements.has(id):
 		push_warning("AchievementsManager: unknown achievement id '%s'." % id)
+		return
+	
+	if is_unlocked(id):
 		return
 	
 	unlocked_ids.append(id)

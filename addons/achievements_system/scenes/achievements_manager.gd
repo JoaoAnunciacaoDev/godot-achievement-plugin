@@ -44,7 +44,8 @@ func _load_achievements_from_folder(folder_path: String) -> void:
 func register_achievement(achievement: Achievement) -> void:
 	if achievement and not achievement.id.is_empty():
 		all_achievements[achievement.id] = achievement
-		achievements_files.append(achievement)
+		if not achievement in achievements_files:
+			achievements_files.append(achievement)
 
 func unlock(id: String) -> void:
 	if not all_achievements.has(id):

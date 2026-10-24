@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dewpbyjeksimq"]
 
 [ext_resource type="Script" uid="uid://crm664b4eim1t" path="res://addons/achievements_system/test/main.gd" id="1_bbovy"]
+[ext_resource type="Theme" uid="uid://dklw1p1q5kg4e" path="res://addons/achievements_system/theme/achievements_theme.tres" id="2_6wnry"]
 [ext_resource type="PackedScene" uid="uid://cbba421fhk82m" path="res://addons/achievements_system/test/achievements_menu.tscn" id="2_xc5lc"]
 
 [node name="Main" type="Control" unique_id=1120129762 node_paths=PackedStringArray("achievements_menu")]
@@ -27,6 +28,8 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_6wnry")
+theme_type_variation = &"achievementCell"
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1550159851]
 layout_mode = 2
@@ -44,6 +47,8 @@ theme_override_constants/separation = 16
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
+theme = ExtResource("2_6wnry")
+theme_type_variation = &"achievementUnlock"
 theme_override_font_sizes/font_size = 64
 text = "Test Area"
 horizontal_alignment = 1
@@ -51,6 +56,7 @@ vertical_alignment = 1
 
 [node name="FirstAchievementButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=60641458]
 layout_mode = 2
+theme = ExtResource("2_6wnry")
 theme_override_font_sizes/font_size = 32
 text = "Test First Achievement"
 

@@ -14,4 +14,5 @@ description = "Achievement 1"
 unlocked_icon = SubResource("PlaceholderTexture2D_6ai1u")
 locked_icon = SubResource("PlaceholderTexture2D_ym5vw")
 is_secret = true
+secret_description = "Descubra"
 metadata/_custom_type_script = "uid://c5qldwy10wd87"

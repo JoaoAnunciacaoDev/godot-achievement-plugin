@@ -1,3 +1,9 @@
 res://addons/achievements_system/test/main.tscn
 res://addons/achievements_system/theme/achievements_theme.tres
+res://addons/achievements_system/scenes/achievement_cell.tscn
 res://addons/achievements_system/scenes/achievements_manager.gd
+res://addons/achievements_system/scenes/achievement_manager.tscn
+res://.gitignore.txt
+res://addons/achievements_system/utils/env.gd
+res://README.md
+res://addons/achievements_system/README.md

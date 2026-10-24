@@ -2,7 +2,7 @@
 
 Um sistema de conquistas completo desenvolvido para **Godot 4.7**. 
 
-Com suporte a **conquistas simples**, **cumulativas (com progresso)**, **conquistas secretas (anti-spoiler)**, **fila de notificações** e **persistência automática em JSON**.
+Com suporte a **conquistas simples**, **cumulativas (com progresso)**, **conquistas secretas (anti-spoiler)**, **fila de notificações**, **persistência configurável em JSON ou Binário**, **gravação atômica segura** e **criptografia opcional via `.env`**.
 
 ---
 
@@ -19,8 +19,12 @@ Com suporte a **conquistas simples**, **cumulativas (com progresso)**, **conquis
   * Se o jogador conquistar múltiplos objetivos ao mesmo tempo, até 3 notificações sobem empilhadas na tela. Se houver mais, elas aguardam na fila e entram automaticamente quando abrir espaço.
 * **Carregamento Automático por Pasta:**
   * O gerenciador varre automaticamente uma pasta configurável do projeto (`res://...`) para carregar todos os recursos `.tres` na inicialização, eliminando a necessidade de arrastar arquivos manualmente no Inspector.
-* **Persistência Automática em JSON:**
-  * Progresso e desbloqueios são salvos e carregados automaticamente em `user://achievements.json`.
+* **Persistência Configurável (JSON ou Binário):**
+  * Escolha entre formato **JSON** (`.json`) para inspeção legível ou **Binário** (`.dat`) para maior performance e proteção contra modificações manuais.
+* **Gravação Segura:**
+  * Os dados são gravados primeiro em um arquivo temporário (`.tmp`) e substituídos somente após o sucesso da escrita, evitando arquivos corrompidos por fechamento repentino do jogo.
+* **Criptografia Opcional (AES-256 via `.env`):**
+  * Proteção do arquivo de save com chave forte gerenciada pela classe utilitária `EnvConfig` (suporte a variável de ambiente, arquivo `.env` local e autogeração com `Crypto`).
 * **Tema Customizável (`Theme`):**
   * Totalmente integrado ao sistema de temas nativo da Godot com *Type Variations*. Troque fontes, tamanhos e cores em um minuto para combinar com o estilo do seu jogo.
 * **Segurança contra Erros de Digitação:**
@@ -34,9 +38,9 @@ Com suporte a **conquistas simples**, **cumulativas (com progresso)**, **conquis
    ```text
    SeuJogo/
    └── addons/
-       └── achievements_system/
-           ├── plugin.cfg
-           └── ...
+	   └── achievements_system/
+		   ├── plugin.cfg
+		   └── ...
    ```
 2. No editor da Godot, acesse: **Projeto → Configurações do Projeto → Plugins**.
 3. Encontre o **AchievementSystem** e marque a caixa **Ativar (Enable)**.
@@ -92,7 +96,7 @@ AchievementsManager.increment(AchievementIDs.COLLECT_COINS)
 ```gdscript
 # Saber se uma conquista já foi desbloqueada:
 if AchievementsManager.is_unlocked(AchievementIDs.FIRST_STEP):
-    print("Conquista já concluída!")
+	print("Conquista já concluída!")
 
 # Obter o progresso atual de uma cumulativa:
 var atual: int = AchievementsManager.get_progress(AchievementIDs.COLLECT_COINS)
@@ -111,12 +115,12 @@ AchievementsManager.reset_all()
 ```gdscript
 # Disparado quando uma conquista é totalmente desbloqueada:
 AchievementsManager.achievement_unlocked.connect(func(data: Achievement):
-    print("Conquista concluída: ", data.achievement_name)
+	print("Conquista concluída: ", data.achievement_name)
 )
 
 # Disparado a cada incremento parcial de uma conquista cumulativa:
 AchievementsManager.achievement_progress.connect(func(data: Achievement, current: int, max_val: int):
-    print("Progresso em %s: %d/%d" % [data.achievement_name, current, max_val])
+	print("Progresso em %s: %d/%d" % [data.achievement_name, current, max_val])
 )
 ```
 
@@ -149,23 +153,61 @@ Você pode abrir esse arquivo e personalizar facilmente:
   Deixe o campo `Unlock Sound` vazio e conecte o sinal em qualquer script do seu jogo:
   ```gdscript
   AchievementsManager.achievement_unlocked.connect(func(_ach):
-      SfxManager.play_sfx("conquista_desbloqueada")
+	  SfxManager.play_sfx("conquista_desbloqueada")
   )
   ```
 
 ---
 
-## Arquivo de Save
+## Arquivo de Save e Persistência
 
-O progresso é salvo automaticamente em:
-`user://achievements.json`
+O sistema gerencia o salvamento e carregamento de forma atômica e segura na pasta de usuário (`user://`).
 
-Estrutura do arquivo:
+### 1. Formatos de Salvamento (`Save Format`)
+No Inspector da cena `achievement_manager.tscn` (ou no nó `AchievementsManager`), configure o campo **Save Format**:
+* **`JSON` (Padrão):** Salva em `user://achievements.json`. Formato em texto legível, ideal para desenvolvimento e inspeção rápida.
+* **`BINARY`:** Salva em `user://achievements.dat`. Formato binário nativo da Godot (`FileAccess.store_var`), oferecendo maior desempenho, menor tamanho de arquivo e impedindo edição fácil em editores de texto convencionais.
+
+Estrutura dos dados salvos:
 ```json
 {
   "unlocked": ["first_step", "secret_treasure"],
   "progress": {
-    "collect_coins": 3
+	"collect_coins": 3
   }
 }
 ```
+
+### 2. Gravação Segura
+Tanto no modo JSON quanto no Binário, o sistema grava os dados primeiramente em um arquivo temporário (`.tmp`). Somente após o encerramento com sucesso da escrita, o arquivo principal é substituído. Isso protege o jogador contra saves zerados ou corrompidos em caso de crashes ou fechamento forçado do jogo.
+
+---
+
+## Criptografia e Segurança
+
+Para proteger o progresso contra alterações por parte de jogadores, marque a opção **`Use Encryption`** no Inspector do `AchievementsManager`.
+
+### Como Funciona a Chave (`EnvConfig`)
+O gerenciamento da chave de encriptação (AES-256) é feito pela classe utilitária `EnvConfig` (`addons/achievements_system/utils/env.gd`), que busca a senha na seguinte ordem:
+
+1. **Variável de Ambiente do SO:** `OS.get_environment("ACHIEVEMENTS_KEY")`.
+2. **Arquivo `.env` Local:** Lê a chave `ACHIEVEMENTS_KEY` definida em `res://.env`.
+3. **Autogeração (Debug):** Se estiver rodando no Editor e o arquivo `.env` não existir, ele gera automaticamente uma chave criptográfica forte (256 bits) com a API `Crypto` da Godot e cria o `res://.env` para você.
+4. **Fallback:** Usa a senha padrão de contingência definida no script.
+
+### ⚠️ Configuração Obrigatória para a Exportação do Jogo
+Por padrão, a Godot **ignora arquivos que começam com ponto (como o `.env`)** durante a exportação do projeto para executáveis de produção (`.pck` / `.exe`).
+
+Se você estiver usando **criptografia** e quiser que o arquivo `.env` gerado no seu projeto seja incluído na build final, você **DEVE** adicioná-lo aos filtros de exportação:
+
+1. No menu superior da Godot, acesse **Projeto → Exportar...** (Project → Export...).
+2. Selecione o preset de exportação da sua plataforma (Windows, Linux, etc.).
+3. Acesse a aba **Recursos** (Resources).
+4. No campo **Filtros para exportar arquivos/pastas que não são recursos** (*Filters to export non-resource files/folders*), adicione:
+   ```text
+   *.env, .env
+   ```
+5. Salve o perfil de exportação.
+
+> [!NOTE]
+> Com essa configuração, o arquivo `.env` será empacotado dentro do `.pck` do jogo exportado, permitindo que o `AchievementsManager` leia a chave de criptografia normalmente na máquina do jogador sem erros de abertura de arquivo.

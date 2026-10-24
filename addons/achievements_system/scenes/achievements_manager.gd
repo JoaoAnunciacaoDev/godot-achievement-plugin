@@ -3,10 +3,17 @@ extends Node
 signal achievement_unlocked(achievement_data: Achievement)
 signal achievement_progress(achievement_data: Achievement, current: int, max_val: int)
 
-const SAVE_FILE_PATH : String = "user://achievements.json"
+const BASE_SAVE_PATH: String = "user://achievements"
+
+enum SaveFormat {
+	JSON,
+	BINARY
+}
 
 @export_dir var achievements_folder: String = "res://resources/achievements/"
 @export var achievements_files: Array[Achievement]
+@export var save_format: SaveFormat = SaveFormat.JSON
+@export var use_encryption: bool = true
 
 var all_achievements: Dictionary = {}
 var unlocked_ids: Array[String] = []
@@ -102,39 +109,81 @@ func reset_all() -> void:
 	_progress.clear()
 	save_progress()
 
+func _get_save_path() -> String:
+	match save_format:
+		SaveFormat.BINARY:
+			return BASE_SAVE_PATH + ".dat"
+		SaveFormat.JSON, _:
+			return BASE_SAVE_PATH + ".json"
+
+func _open_file(path: String, mode: FileAccess.ModeFlags) -> FileAccess:
+	var password:String = EnvConfig.get_encryption_password()
+	if use_encryption and not password.is_empty():
+		return FileAccess.open_encrypted_with_pass(path, mode, password)
+	
+	return FileAccess.open(path, mode)
+
 func save_progress() -> void:
-	var file := FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)
+	var path: String = _get_save_path()
+	var temp_path: String = path + ".tmp"
+	
+	var file: FileAccess = _open_file(temp_path, FileAccess.WRITE)
 	if not file:
-		printerr("AchievementsManager: failed to write save file at '%s'." % SAVE_FILE_PATH)
+		printerr("AchievementsManager: falha ao criar arquivo temporário em '%s'." % temp_path)
 		return
 	
 	var data := {
 		"unlocked": unlocked_ids,
 		"progress": _progress,
 	}
-	file.store_string(JSON.stringify(data))
+	
+	match save_format:
+		SaveFormat.JSON:
+			file.store_string(JSON.stringify(data, "\t"))
+		SaveFormat.BINARY:
+			file.store_var(data)
+	
 	file.close()
+	
+	if FileAccess.file_exists(path):
+		DirAccess.remove_absolute(path)
+	
+	var err := DirAccess.rename_absolute(temp_path, path)
+	if err != OK:
+		printerr("AchievementsManager: falha ao renomear arquivo temporário para '%s'. Erro: %d" % [path, err])
 
 func load_progress() -> void:
-	if not FileAccess.file_exists(SAVE_FILE_PATH):
+	var path := _get_save_path()
+	if not FileAccess.file_exists(path):
 		return
 	
-	var file := FileAccess.open(SAVE_FILE_PATH, FileAccess.READ)
+	var file := _open_file(path, FileAccess.READ)
 	if not file:
-		printerr("AchievementsManager: failed to read save file at '%s'." % SAVE_FILE_PATH)
+		printerr("AchievementsManager: falha ao abrir arquivo (senha incorreta ou corrompido).")
 		return
 	
-	var content : String = file.get_as_text()
-	file.close()
+	var parsed: Variant = null
 	
-	if content.is_empty():
-		return
+	match save_format:
+		SaveFormat.JSON:
+			var content: String = file.get_as_text()
+			file.close()
+			if content.is_empty():
+				return
+			parsed = JSON.parse_string(content)
+			if parsed == null:
+				printerr("AchievementsManager: save file is corrupted.")
+				return
+		SaveFormat.BINARY:
+			parsed = file.get_var()
+			file.close()
+			if parsed == null:
+				printerr("AchievementsManager: binary save file is corrupted or empty.")
+				return
 	
-	var parsed = JSON.parse_string(content)
-	if parsed == null:
-		printerr("AchievementsManager: save file is corrupted.")
-		return
-	
+	_apply_loaded_data(parsed)
+
+func _apply_loaded_data(parsed: Variant) -> void:
 	if typeof(parsed) == TYPE_ARRAY:
 		_import_legacy_format(parsed)
 		return
@@ -146,7 +195,6 @@ func load_progress() -> void:
 				if typeof(item) == TYPE_STRING:
 					ids.append(item)
 			unlocked_ids = ids
-
 		if parsed.has("progress") and typeof(parsed["progress"]) == TYPE_DICTIONARY:
 			_progress = parsed["progress"]
 	else:
@@ -157,6 +205,7 @@ func _import_legacy_format(arr: Array) -> void:
 	for item in arr:
 		if typeof(item) == TYPE_STRING:
 			ids.append(item)
+	
 	unlocked_ids = ids
 	save_progress()
 	print("AchievementsManager: legacy save migrated to new format.")

@@ -105,14 +105,32 @@ Override by:
 
 ---
 
-## Save File
+## Save File & Persistence
 
-Progress is stored at `user://achievements.json`.  
+Progress is stored in `user://` with atomic file writes to prevent corrupted saves:
+* **JSON (Default):** `user://achievements.json`
+* **Binary:** `user://achievements.dat` (set via `save_format` export in `AchievementsManager`)
+
 The format is:
-
 ```json
 {
   "unlocked": ["first_delivery", "no_deaths"],
   "progress": { "find_keys": 2 }
 }
 ```
+
+---
+
+## Encryption & Security
+
+To enable save file encryption (AES-256):
+1. Enable **`Use Encryption`** on `AchievementsManager`.
+2. Encryption keys are resolved by `EnvConfig` (`ACHIEVEMENTS_KEY` in environment, `res://.env`, or auto-generated with `Crypto` during debug).
+
+### ⚠️ Export Configuration
+Godot excludes dotfiles by default. If using `.env` with encryption, add `.env` to the exported `.pck`:
+* Go to **Project → Export...**
+* Under **Resources → Filters to export non-resource files/folders**, add:
+  ```text
+  *.env, .env
+  ```

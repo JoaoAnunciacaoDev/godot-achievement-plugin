@@ -5,3 +5,5 @@
 [node name="AchievementsManager" type="Node" unique_id=1314859621]
 script = ExtResource("1_mgr")
 achievements_folder = "res://addons/achievements_system/achievements"
+save_format = 1
+use_encryption = false
